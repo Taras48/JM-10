@@ -31,6 +31,7 @@ $(document).ready(function () {
         event.preventDefault();
         addForm();
         $(':input', '#addForm').val('');
+
     });
 
     function addForm() {
@@ -42,34 +43,35 @@ $(document).ready(function () {
             'message': $("#addMessage").val()
         };
 
-        // $("#addFormUser").prop("disabled", true);
-
         $.ajax({
 
-            type: 'POST',
-            url: "/admin/add",
+                type: 'POST',
+                url: "/admin/add",
 
-            contentType: 'application/json;',
-            data: JSON.stringify(user),
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            async: true,
-            cache: false,
-            dataType: 'JSON',
+                contentType: 'application/json;',
+                data: JSON.stringify(user),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                async: true,
+                cache: false,
+                complete:
+                    function () {
+                        getTable();
+                        $("#home-tab").tab('show');
+                    }
+            }
+        );
+    }
+    ;
 
-        });
-
-
-    };
-
-    //updateForm
+//updateForm
     $("#updateFormUser").click(function (event) {
         event.preventDefault();
         updateForm();
         $("#editUser").modal('toggle');
-        getTable();
+        $("#home-tab").tab('show');
 
     });
 
@@ -96,19 +98,20 @@ $(document).ready(function () {
             async: true,
             cache: false,
             dataType: 'JSON',
-            success: function () {
-                getTable();
-            }
-
+            complete:
+                function () {
+                    getTable();
+                    $("#home-tab").tab('show');
+                }
         });
 
     };
 
-    //deleteForm
+//deleteForm
     $(document).on('click', '#deleteUser', function () {
         var id = $(this).closest("tr").find("#tableId").text();
         deleteUser(id);
-        getTable();
+
     });
 
     function deleteUser(id) {
@@ -126,18 +129,16 @@ $(document).ready(function () {
             async: true,
             cache: false,
             dataType: 'JSON',
-            success: function () {
-                getTable();
-            }
+            complete:
+                function () {
+                    getTable();
+                    $("#home-tab").tab('show');
+                }
         });
 
     };
 
-    $("#home-tab").click(function () {
-        getTable();
-    });
-
-    //from table
+//from table
     function getTable() {
 
         $.ajax({
@@ -154,10 +155,12 @@ $(document).ready(function () {
             dataType: 'JSON',
             success: function (listUsers) {
                 var htmlTable = "";
+                $("#UserTable tbody").empty();
+
                 for (var i = 0; i < listUsers.length; i++) {
-                    if(listUsers[i].roles.length > 1){
-                        var htmlRole = listUsers[i].roles[0].role +'-'+listUsers[i].roles[1].role;
-                    }else {
+                    if (listUsers[i].roles.length > 1) {
+                        var htmlRole = listUsers[i].roles[0].role + '-' + listUsers[i].roles[1].role;
+                    } else {
                         var htmlRole = listUsers[i].roles[0].role
                     }
                     htmlTable += ('<tr id="list">');
@@ -165,18 +168,19 @@ $(document).ready(function () {
                     htmlTable += ('<td id="tableName">' + listUsers[i].name + '</td>');
                     htmlTable += ('<td id="tableMess">' + listUsers[i].message + '</td>');
                     htmlTable += ('<td id="tablePass">' + listUsers[i].password + '</td>');
-                    htmlTable += ('<td id="tableRole">' + htmlRole  + '</td>');
+                    htmlTable += ('<td id="tableRole">' + htmlRole + '</td>');
                     htmlTable += ('<td><button id="editUserBtn"  class="btn btn-sm btn-info" type="button" data-toggle="modal"' +
                         ' data-target="#editUser">Edit</button></td>');
                     htmlTable += ('<td><button id="deleteUser" class="btn btn-sm btn-info" type="button">Delete</button></td>');
                     htmlTable += ('</tr>');
                 }
-                $("#UserTable #list").remove();
-                $("#getUserTable thead").after(htmlTable);
+
+                $("#UserTable tbody").append(htmlTable);
             }
 
         });
     };
 
-});
+})
+;
 

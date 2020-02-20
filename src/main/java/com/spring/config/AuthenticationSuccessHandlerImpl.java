@@ -26,17 +26,7 @@ public class AuthenticationSuccessHandlerImpl implements AuthenticationSuccessHa
 
         String targetUrl = "";
 
-        /*Collection<? extends GrantedAuthority> roles = authentication.getPrincipal();
-        for (GrantedAuthority role : roles){
-            if (role.getAuthority().equals("admin")){
-                targetUrl = "/admin";
-                break;
-            }
-            if (role.getAuthority().equals("user")){
-                targetUrl = "/user";
-                break;
-            }
-        }*/
+
 
         User user = (User) authentication.getPrincipal();
         for (Role role : user.getRoles()){
