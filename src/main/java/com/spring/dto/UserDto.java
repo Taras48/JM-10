@@ -1,6 +1,6 @@
-package com.spring.model;
+package com.spring.dto;
 
-public class JsonUser {
+public class UserDto {
     private Long id;
     private String name;
     private String password;
@@ -49,7 +49,7 @@ public class JsonUser {
 
     @Override
     public String toString() {
-        return "JsonUser{" +
+        return "UserDto{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", password='" + password + '\'' +

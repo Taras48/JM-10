@@ -1,10 +1,12 @@
 package com.spring.controler;
 
-import com.spring.model.JsonUser;
+import com.spring.dto.UserDto;
 import com.spring.model.User;
 import com.spring.service.RoleService;
 import com.spring.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,29 +25,29 @@ public class UserRestController {
     }
 
     @GetMapping(value = "/all")
-    public @ResponseBody
-    List<User> getAllUsers() {
+    public ResponseEntity<List<User>> getAllUsers() {
         List<User> list = userService.findAll();
-        return list;
+      //  return list;
+        return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
     @PostMapping(value = "/add")
-    public void postAdd(@RequestBody JsonUser jsonUser) {
+    public void postAdd(@RequestBody UserDto userDto) {
         User user = new User();
-        user.setName(jsonUser.getName());
-        user.setPassword(jsonUser.getPassword());
-        user.setMessage(jsonUser.getMessage());
-        user.setRoles(roleService.findAllByRole(jsonUser.getRole()));
+        user.setName(userDto.getName());
+        user.setPassword(userDto.getPassword());
+        user.setMessage(userDto.getMessage());
+        user.setRoles(roleService.findAllByRole(userDto.getRole()));
         userService.saveUser(user);
     }
 
     @PutMapping(value = "/update")
-    public void putUpdateUser(@RequestBody JsonUser jsonUser) {
-        User upUser = userService.getUserById(jsonUser.getId());
-        upUser.setName(jsonUser.getName());
-        upUser.setPassword(jsonUser.getPassword());
-        upUser.setRoles(roleService.findAllByRole(jsonUser.getRole()));
-        upUser.setMessage(jsonUser.getMessage());
+    public void putUpdateUser(@RequestBody UserDto userDto) {
+        User upUser = userService.getUserById(userDto.getId());
+        upUser.setName(userDto.getName());
+        upUser.setPassword(userDto.getPassword());
+        upUser.setRoles(roleService.findAllByRole(userDto.getRole()));
+        upUser.setMessage(userDto.getMessage());
         userService.updateUser(upUser);
     }
 
